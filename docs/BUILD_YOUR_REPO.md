@@ -1,23 +1,23 @@
-# Build and maintain the repository yourself
+# Build your repository
 
-This guide starts from either the published course or a blank repository. Keep a history that makes the design's development understandable: one working idea, its tests, and its explanation per commit.
+Keep each commit small: one working CPU change and the test that proves it.
 
-## Route A: follow this course in your own copy
+## Start from the course
 
-Fork [daryl-888/RISCV_FPGA](https://github.com/daryl-888/RISCV_FPGA) using GitHub, then clone your fork. In the commands below, replace `YOUR_USERNAME` before running them.
+Fork [daryl-888/RISCV_FPGA](https://github.com/daryl-888/RISCV_FPGA), replace `YOUR_USERNAME`, then run in **Ubuntu/WSL**:
 
 ```sh
 git clone https://github.com/YOUR_USERNAME/RISCV_FPGA.git
 cd RISCV_FPGA
 make test
-git switch -c week-01-foundations
+git switch -c week-01-parts
 ```
 
-Use [SETUP.md](SETUP.md) if `make` or `verilator` is missing. Do not paste shell prompts or run Linux installation commands in a PowerShell window.
+Follow [SETUP.md](SETUP.md) first if tools are missing. The supplied tests and CI cover the ALU; add CPU targets as you implement them.
 
-## Route B: build the structure from a blank folder
+## Or start blank
 
-Create a public empty repository on GitHub named `RISCV_FPGA`. Leave the initial README, license and gitignore unchecked if you will create them locally. In a Linux/WSL terminal:
+Create an empty GitHub repository, then:
 
 ```sh
 mkdir RISCV_FPGA
@@ -26,55 +26,31 @@ git init -b main
 mkdir -p docs rtl/common rtl/single_cycle rtl/pipeline rtl/soc sim programs scripts fpga .github/workflows
 ```
 
-Write the README first: scope, supported instructions, commands and measured status. Then add `.gitignore` for build outputs. Copy or author the leaf testbench, ALU, Makefile, and tool checks before writing a whole CPU. Git tracks files, not empty directories; put a short README in each planned implementation directory.
-
-Configure your own commit name and email with `git config user.name` and `git config user.email` if Git requests them. Use a GitHub-provided no-reply email if you prefer to keep your personal address out of public commits. Never paste a password or access token into a source file or remote URL.
+Write a README with scope, commands, and measured status. Add `.gitignore`, `.gitattributes`, ALU, testbench, Makefile, and tool checks. Git tracks files, so add a short README to planned directories. After those files exist:
 
 ```sh
 git add README.md .gitignore .gitattributes docs rtl sim programs scripts fpga Makefile .github
-git diff --cached --stat
 git diff --cached
-git commit -m "Add course structure and tested ALU example"
+git commit -m "Add structure and tested ALU"
 git remote add origin https://github.com/YOUR_USERNAME/RISCV_FPGA.git
 git push -u origin main
 ```
 
-For an existing nonempty remote, clone it first and add your files there. Do not use force-push to overcome an unrelated-history error.
+If Git requests identity, configure `user.name` and `user.email`; GitHub's no-reply address is an option. Never commit tokens. Clone an existing nonempty remote instead of force-pushing over it.
 
-## Development sequence
+## Build in 12 labs
 
-| Milestone | Suggested branch | Commit only after |
+| Week | Labs | Commit working pieces |
 |---|---|---|
-| Foundations | `week-01-foundations` | ALU and clocked-state exercises pass |
-| Single-cycle skeleton | `week-02-single-cycle` | Minimal instruction subset and reset pass |
-| Single-cycle expansion | `week-03-isa-tests` | ISA, boundary and fault tests pass |
-| Pipeline | `week-04-pipeline` | Valid bits, independent instructions and forwarding pass |
-| Pipeline verification | `week-05-hazards` | Stalls, flushes and ordered trace comparisons pass |
-| Board system | `week-06-basys3` | Wrapper simulation, timing and hardware demonstration pass |
+| 1 | 1–2 | Single-cycle parts |
+| 2 | 3–4 | Remaining single-cycle parts |
+| 3 | 5–6 | Full 37-instruction baseline; pipeline registers |
+| 4 | 7–8 | Forwarding; load-use stalls |
+| 5 | 9–10 | Redirects/faults; equivalence regression |
+| 6 | 11–12 | Board-wrapper simulation; Vivado and board |
 
-Use `git switch -c BRANCH_NAME` at each milestone. Commit short working steps rather than waiting until a week ends. A useful commit message says what became possible, such as “Forward latest ALU result into branch comparison.”
+Use `git switch -c BRANCH_NAME` for a new milestone. Each session: pull, write expected behavior, code a small change, run its test and relevant regression, inspect `git diff`, then commit named files and push. Record a short explanation of any failing waveform. A useful bug report includes the program/input, expected result, actual result, and failing assertion.
 
-## Daily workflow for a student
+Track RTL, tests, assembly, linker/conversion scripts, Tcl/XDC, and concise results. Ignore generated build trees and raw waveforms. For each simulation, synthesis, timing, and board result, record the command, tool version, commit, outcome, and evidence. Mark unrun checks “not run.” Record actual clock frequency when comparing performance.
 
-1. Pull your current branch before starting work.
-2. Write the expected behavior and a test for today's small change.
-3. Run the test, make the change, rerun it and the existing relevant regression.
-4. Save a brief report from the workbook: prediction, observation, explanation.
-5. Review `git diff` and `git status`; add named files deliberately.
-6. Commit, push, and ask your tutor to review the explanation and evidence.
-
-Use an issue for a reproducible bug: expected behavior, observed behavior, program/input, tool versions, and the failing assertion. Use a pull request to explain the change and link the issue. The provided CI checks the starter only; extend it with actual CPU targets when those tests exist.
-
-## Keep the public repository reproducible
-
-Track SystemVerilog, testbenches, linker script, assembly, image conversion scripts, Tcl, XDC and concise reports. Include a tool-version record and exact build commands. Save small illustrative waveform screenshots when they teach something; leave raw waveforms and complete generated Vivado trees out of Git.
-
-For a release, preserve the commit SHA, program-image checksum, test summary, FPGA part, clock frequency, utilization, setup/hold timing summary and board-demo instructions. A green simulation badge does not mean timing or physical hardware has passed.
-
-## Attribution and licensing
-
-Link the reference repository and official technical sources. The reference snapshot did not expose a license; public readability alone is not a reason to add a license over someone else's copied RTL. This course uses original teaching examples and links the reference for study. Choose your license for the material you own before advertising reuse or accepting copied contributions. Keep any third-party notices with material you intentionally reuse.
-
-## A useful final README status table
-
-Keep separate rows for unit simulation, single-cycle ISA tests, pipeline hazard tests, wrapper simulation, synthesis, timing and board execution. Each row should state the command or procedure, tool version, commit, outcome and evidence link. Use “not run” when evidence is missing. This lets another learner reproduce your results without guessing what “working” means.
+Link original references and retain third-party notices. The reference snapshot exposed no license; public visibility does not grant reuse rights. Choose a license only for material you own or are authorized to license.
