@@ -1,0 +1,26 @@
+name: Starter checks
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  starter:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install simulation and assembly tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y verilator build-essential python3 gcc-riscv64-unknown-elf binutils-riscv64-unknown-elf
+      - name: Record versions
+        run: |
+          verilator --version
+          riscv64-unknown-elf-gcc --version
+      - name: Lint and test starter
+        run: |
+          make lint
+          make test
+          make waves
+      - name: Assemble example programs
+        run: |
+          make program PROGRAM=arithmetic
+          make program PROGRAM=switches_leds
