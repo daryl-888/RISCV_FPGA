@@ -14,9 +14,15 @@ Environment: Ubuntu through WSL, Verilator **5.032**. Commands executed from the
 
 The ALU checks cover wraparound arithmetic, Boolean operations, signed/unsigned comparison, logical/arithmetic shifts, five-bit shift amounts, and a default control value. The converter checks word/byte endianness, padding and invalid inputs. These checks validate those supplied components only.
 
+## Independent clean-environment check
+
+The [GitHub Actions run for commit 58b2cbd](https://github.com/daryl-888/RISCV_FPGA/actions/runs/35689455698) completed successfully on September 22, 2026, on Ubuntu 24.04. It installed the declared packages, recorded tool versions, passed lint, all starter tests and waveform generation, and assembled both `arithmetic` and `switches_leds` through ELF, binary and padded instruction-hex generation.
+
+This verifies the published starter and program-build commands in a fresh environment. It does not simulate execution of those programs on a completed CPU. The run's version and command logs are the reproducibility record for that environment.
+
 ## Checks to run during the course
 
-- `make program PROGRAM=arithmetic` and `make program PROGRAM=switches_leds` using the RISC-V GNU bare-metal toolchain.
+- Repeat `make program PROGRAM=arithmetic` and `make program PROGRAM=switches_leds` on the student's installed RISC-V GNU bare-metal toolchain.
 - All student-created leaf and CPU testbenches, ordered trace comparison, hazard regression and fault handling.
 - Basys 3 wrapper simulation, Vivado synthesis, implementation, setup/hold timing, DRC review and actual board execution.
 
